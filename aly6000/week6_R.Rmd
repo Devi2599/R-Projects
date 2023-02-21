@@ -1,0 +1,345 @@
+
+<P><BR>
+<CENTER>
+<FONT SIZE = 4, COLOR="#2c32c3">
+<P>Final Project Report</P>
+<B>ALY6000 Introduction  to Analytics</B>
+<BR><B>NORTHEASTERN UNIVERSITY</B>
+<BR>DEVIKA PATIL
+<BR>MAJOR-PROJECT MANAGEMENT
+<BR>DATE OF SUBMISSION: 18-02-2023
+<P>Dr.Dee Chiluiza, PhD</P>
+</FONT>
+</CENTER>
+<BR>
+
+<P><FONT SIZE = 4><B>ACKNOWLEDGEMENT</B>
+<P><FONT SIZE = 3>I would like to express my deepest gratitude to my supervisor,Dr.Dee Chiluiza, for their guidance, encouragement, and insightful feedback throughout the project. Their valuable suggestions and support have helped me in completing this project successfully.
+
+I would also like to thank Sadaf Fathima, Vedant Wagh, and Sujay Torvi for their valuable assistance in the data collection and analysis process. Their contributions have helped me to understand the project better and have improved the overall quality of the project.
+
+In addition, I would like to express my appreciation to the Northeastern University for providing the necessary resources and support to carry out this project. Without their support, this project would not have been possible.
+
+Finally, I would like to acknowledge my family and friends for their unwavering support and encouragement throughout this project. Their motivation and love have kept me going, and I am forever grateful for their presence in my life.
+
+
+
+<P><FONT SIZE = 4><B>INTRODUCTION</B>
+
+<P><FONT SIZE = 3>One of the most important measures used by companies to monitor their performance and expansion is sales data. In the current global economy, businesses are relying more and more on data analytics to improve their sales tactics and boost income. Businesses may now manage sales data from different sources, including website traffic, social media, and mobile apps, thanks to the growth of e-commerce and online marketplaces. This enables companies to understand consumer behavior and preferences, spot trends, and make informed decisions. Businesses can also spot market trends and modify their marketing plans by examining sales data. Businesses can examine vast volumes of sales data with the use of powerful data analytics tools to acquire a competitive advantage and achieve sustainable growth in the global market.(Africapolis,2021)
+
+<P><FONT SIZE =3>The dataset likely includes information about different departments, their respective total sales, and the market area in which the sales took place. This type of data could be used to analyze sales performance, identify areas of growth, and make data-driven business decisions. It may also be used for predictive modeling to forecast future sales trends.
+
+<P><FONT SIZE = 3>Analyzing sales data,measuring customer satisfaction,evaluating product quality,monitoring financial performance.In summary, descriptive statistics plays a critical role in helping businesses to analyze and interpret data related to sales, customer satisfaction, product quality, and financial performance. By using descriptive statistics, businesses can make informed decisions and take actions to improve their operations, products, and services.
+
+<P><FONT SIZE = 3>An R script is a plain text file that contains a series of commands in the R programming language. The script can be run in R to perform a series of analyses on data. The script can also be saved and re-used later.
+<P>Pros:
+R scripts are very simple to create and can be used to automate repetitive tasks.
+R scripts are easy to read and modify, making them useful for collaborative work.
+R scripts can be used to create reproducible code, which is important for scientific research.
+<P>Cons:
+R scripts don't include any text formatting or document structure.
+It is hard to include explanations of the analysis performed in R scripts.
+<P>R Markdown is a document format that combines R code, text, and formatting in a single file. R Markdown files can be converted to different formats such as PDF, HTML or Word documents. The code blocks within an R Markdown document can be executed and the results can be displayed directly in the document.
+<P>Pros:
+R Markdown files provide the ability to integrate text, code, and output, making it easy to create documents with explanatory text and figures.
+R Markdown files can be easily exported into different formats for sharing with others.
+R Markdown files are a great tool for reproducible research and data analysis.
+<P>Cons:
+R Markdown can be complex and time-consuming to learn.
+R Markdown can be difficult to debug if there is a problem with the formatting.
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(rmarkdown)
+library(readxl)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(RColorBrewer)
+library(ggplot2)
+
+prod_Data = read_excel("Datasets/M6_project_dataset(2023).xlsx")
+  
+```
+```{r, message=FALSE, warning=FALSE}
+#task1-descriptive statistics for the database
+
+Stat_min = prod_Data %>% select(Product_Price, Quantity, Shipping_Cost_Each, Returns, Loss_Per_Return)%>% 
+  summarise_all(min)
+Stat_max  = prod_Data %>% select(Product_Price, Quantity, Shipping_Cost_Each, Returns, Loss_Per_Return)%>%
+  summarise_all(max)
+Stat_sd = prod_Data %>% select(Product_Price, Quantity, Shipping_Cost_Each, Returns, Loss_Per_Return)%>%
+ summarise_all(sd)
+Stat_var  = prod_Data %>% select(Product_Price, Quantity, Shipping_Cost_Each, Returns, Loss_Per_Return)%>%
+ summarise_all(var)
+Stat_mean = prod_Data %>% select(Product_Price, Quantity, Shipping_Cost_Each, Returns, Loss_Per_Return)%>%
+  summarise_all(mean)
+Stat_median  = prod_Data %>% select(Product_Price, Quantity, Shipping_Cost_Each, Returns, Loss_Per_Return)%>%
+  summarise_all(median)
+
+```
+
+```{r, message=FALSE, warning=FALSE}
+##create table with columns and rows
+B1_tab = matrix(c(round(Stat_mean,2),round(Stat_median,2),round(Stat_min,2),round(Stat_max,2),
+                  round(Stat_sd,2),round(Stat_var,2)),byrow = TRUE, nrow = 6)
+col_names = c("Product_price","Quantity","Shipping_cost","Returns","Loss_per_return")
+r_names = c("mean","median","minimum","maximum","sd","variance")
+colnames(B1_tab) = col_names
+rownames(B1_tab) = r_names
+knitr::kable(B1_tab, digits = 2,
+             caption = "Table :Total sales per department",
+             format = "html",
+             table.attr = "style='width:40%:'",
+             align = 'c')%>%
+  kable_classic(bootstrap_options = "basic",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+#observations:the statistics include mean,median,minimum value, maximum value, standard deviation, variance of product_price,quantity,shipping_cost, returns,loss_per_return.
+```
+```{r, message=FALSE,warning=FALSE}
+##create a boxplot graph
+boxplot(prod_Data$Quantity, horizontal = T, xlab ="Quantity", main ="Box Plot for quantity", col="red")
+
+#Observations:median is positioned between 100 to 200 with no potential outliers.
+
+```
+```{r,  message=FALSE,warning=FALSE}
+##task 1(continued):
+hist(prod_Data$Quantity, main="Histogram of Quantity", xlab="Quantity", breaks = 25, ylim=c(0,200), col="darkred")
+
+#observations:the quantity peaks around 0-100 and then decreases as graph proceeds further.
+```
+```{r, message=FALSE, warning=FALSE}
+#create boxplot
+boxplot(prod_Data$Shipping_Cost_Each, main ="Boxplot of shipping costs", xlab="Shipping_Cost_Each", horizontal = TRUE, col = "navyblue")
+
+#create histogram
+hist(prod_Data$Shipping_Cost_Each, main = "histogram of shipping costs", xlab = "s_c_e", breaks = 20, col = "green")
+
+#observations: From the boxplot the median shipping cost lies between the range of 0-10 and the potential outliers starting from being between 40-50 and contnuing thereafter and from the histogram we see that the frequency peaks between 0-10 and gradually decreases as we proceed further.
+```
+
+```{r, message=FALSE, warning=FALSE}
+#task2:display mean and median on both graphs
+# Generate some example data
+set.seed(123)
+shipping_costs <- rnorm(100, mean = 10, sd = 2)
+
+# Set up the plot layout
+
+
+# Create the histogram
+hist(prod_Data$Shipping_Cost_Each, main = "Shipping Cost Each", xlab = "Cost ($)", col = "lightblue")
+abline(v = mean(prod_Data$Shipping_Cost_Each), col = "red", lwd = 2, lty = "dashed")
+abline(v = median(prod_Data$Shipping_Cost_Each), col = "blue", lwd = 2, lty = "dashed")
+legend("topright", legend = c("Mean", "Median"), col = c("red", "blue"), lty = "dashed", lwd = 2)
+
+##observations:In this histogram, we can see that the majority of the test scores are between 80 and 90, with a peak around 85. There are fewer scores in the 60-70 and 90-100 ranges.
+```
+```{r, message=FALSE, warning=FALSE}
+# Create the box plot
+boxplot(prod_Data$Shipping_Cost_Each, horizontal = TRUE, main = "Shipping Cost Each", xlab = "Cost ($)", col = "lightgreen")
+abline(v = mean(prod_Data$Shipping_Cost_Each), col = "red", lwd = 2, lty = "dashed")
+abline(v = median(prod_Data$Shipping_Cost_Each), col = "blue", lwd = 2, lty = "dashed")
+legend("topright", legend = c("Mean", "Median"), col = c("red", "blue"), lty = "dashed", lwd = 2)
+##observations:This should produce a two-panel plot with a histogram of the shipping costs in the top panel and a horizontal box plot in the bottom panel. The mean and median of the shipping costs are shown as dashed lines on both plots, and there is a legend in the top right corner showing which line corresponds to which statistic.
+```
+```{r, message=FALSE, warning=FALSE}
+##task 3-creating boxplot
+# Create box plot with Market on x-axis and Shipping_Cost on y-axis
+boxplot(prod_Data$Shipping_Cost_Each ~ prod_Data$Market, xlab = "Market",
+   ylab = "shipping_cost", main = "shipping cost over market", col = terrain.colors(8))
+
+
+##observation:box plot that shows the distribution of shipping costs for each market, allowing you to visually compare the shipping costs across different markets.
+
+#task 3a
+# Load the dataset
+prod_Data = read_excel("Datasets/M6_project_dataset(2023).xlsx")
+
+# Calculate the summary statistics for each market
+summary_stats = aggregate(prod_Data$Shipping_Cost_Each ~ prod_Data$Market, data = prod_Data, FUN = function(x) c(mean = mean(x), median = median(x), sd = sd(x), min = min(x), max =max(x)))
+
+
+# Print the summary statistics for each market
+print(summary_stats)
+
+##Observations: Africa has the highest shipping costs when compared to other markets.
+```
+
+```{r, message=FALSE, warning=FALSE}
+##task 4:boxplot and bargraph for shipping cost
+
+#prepare table for market with different elements of table
+smm = tapply(prod_Data$Shipping_Cost_Each, prod_Data$Market, mean)
+col_names = c("mean","X","Y","Z","A")
+r_names = c("mean","median","minimum","maximum","sd","variance")
+knitr::kable(smm, align = 'c', latex_options = "striped",
+               digits = 2)
+barplot(smm, las =2, cex.names = 0.6, col = heat.colors(6), xlab = "market ship data", ylab = "shipping_cost_each")
+
+ppm = tapply(prod_Data$Product_Price, prod_Data$Market, median)
+col_names = c("median","X","Y","Z","A")
+r_names = c("mean","median","minimum","maximum","sd","variance")
+knitr::kable(ppm, align = 'c', latex_options = "striped",
+               digits = 2)
+barplot(ppm, las =2, cex.names = 0.6, col = heat.colors(6), xlab = "market ship data", ylab = "product_price")
+
+qms = tapply(prod_Data$Quantity, prod_Data$Market, sum)
+col_names = c("Market","Sum")
+r_names = c("Africa","Asia Pacific","Europe","LATAM","USCA")
+knitr::kable(qms, align = 'c',latex_options = "striped", 
+               digits = 2)
+#Create barplot
+barplot(qms, las =2, cex.names = 0.6, col = heat.colors(6), xlab = "market ship data", ylab = "quantity")
+
+f_t = rbind(smm,ppm,qms)
+knitr::kable(f_t, latex_options = "striped",align = 'c', 
+               digits = 2)
+
+
+##observations:the first row "smm" shows the mean of  shipping costs over the 5 markets and AFRICA being the highest,the second row "ppm" shows the median of the product price over the 5 markets and EUROPE has the maximum median value, the third row "qms" shows the sum of quantity over the 5 markets and EUROPE has the maximum number of quantity over the other markets.Comparing the boxplot and the bargraph we deduce that there is no change in data as the africa still has maximum shipping cost and LATAM has second maximum shipping cost. We can deduce that Asia Pacific,European and LATAM market are in the lead and they have a great potential for their market to grow and expand correlating to the quantity and product price of these markets.  
+  
+```
+
+```{r, message=FALSE, warning=FALSE}
+#task5:displaying the boxplot for shipping cost vs shipmode
+boxplot(prod_Data$Shipping_Cost_Each ~ prod_Data$ShipMode, data = mtcars, xlab = "Shipmode",
+   ylab = "Shipping_cost_each", main = "ship Data", col = terrain.colors(8))
+
+##observations: The shipping cost for Africa is relatively higher compared to other class if the mode of shipment is on the same day and the least for standard class,The product price is highest in European in parallel with Asia Pacific and the quantity of the product being sold is highest in Europe and Asia Pacific.
+
+```
+```{r , message=FALSE, warning=FALSE}
+#task6:to add a new column of total sales
+# Load the dataset
+prod_Data = read_excel("Datasets/M6_project_dataset(2023).xlsx")
+
+
+# Add a new column for total sales using pipes and mutate()
+mydata = prod_Data %>% mutate(total_sales = Product_Price * Quantity)
+view(mydata)
+glimpse(mydata[1,])
+##Observations:The total sales for Market "Africa"is $55446.16 and we can observe the details of the product in the table displayed.
+
+```
+
+```{r , message=FALSE, warning=FALSE}
+#task7:extract total sales data from different sections of the table
+# Find the market with the highest sales
+
+
+v1= mydata %>%
+  group_by(Market) %>%
+  summarize(total_sales1 = sum(total_sales)) %>%
+  arrange(desc(total_sales1)) %>%
+  head(5)
+knitr::kable(v1,digits = 2,
+             caption = "Table :Total sales per Market",
+             format = "html",
+             table.attr = "style='width:40%:'",
+             align = 'c')%>%
+  kable_classic(bootstrap_options = "basic",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+
+v2= mydata %>%
+  group_by(Segment) %>%
+  summarize(total_sales2 = sum(total_sales)) %>%
+  arrange(desc(total_sales2)) %>%
+  head(6)
+knitr::kable(v2,digits = 2,
+             caption = "Table :Total sales per Segment",
+             format = "html",
+             table.attr = "style='width:40%:'",
+             align = 'c')%>%
+  kable_classic(bootstrap_options = "basic",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+v3= mydata %>%
+  group_by(Department) %>%
+  summarize(total_sales3 = sum(total_sales)) %>%
+  arrange(desc(total_sales3)) %>%
+  head(5)
+knitr::kable(v3,digits = 2,
+             caption = "Table :Total sales per Department",
+             format = "html",
+             table.attr = "style='width:40%:'",
+             align = 'c')%>%
+  kable_classic(bootstrap_options = "basic",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+
+barplot(mydata$total_sales, las= 0.5, col= heat.colors(8))
+
+
+##observations:In v1 table Asia Pacific has the highest total_sales that is 24704625,Africa has the lowest total sales of 5127296.in v2 table Home office has total sales of 12980145,consumer has a total sales of 41640653, and Corporate has total sales of	23377596.In v3 table Office Supplies has sales of 43461505,Technology has	sales of 27764569, Furniture has sales of	6772320
+
+
+```
+
+
+```{r,  warning=FALSE, message=FALSE}
+#task8:
+set = mydata%>%
+  group_by(Department)%>%
+  summarise(Total_dept = sum(total_sales))
+knitr::kable(set,
+             digits = 2,
+             caption = "Table :Total sales per department",
+             format = "html",
+             table.attr = "style='width:40%:'",
+             align = 'c')%>%
+  kable_classic(bootstrap_options = "basic",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+
+t123 = dplyr::filter(mydata, Department == "Technology")
+
+Dep_1 = table(t123$Division)
+#Observations:From the table we deduce that the office supplies have been the highest in the department section with maximum number of sales reaching 43461505
+
+```
+----
+<P>
+<P>CONCLUSIONS: By analyzing sales data across different departments, divisions, and segments,we can identify which products or services which are performing well, which ones are not, and which ones have the potential for growth.Shipping costs, quantity, and product price are all key metrics for sales data analysis. Shipping costs can impact the overall profitability of a sale, so it's important to track them and look for ways to optimize them. Quantity sold can be an indicator of the popularity of a product, while product price can impact both sales volume and revenue.Overall, the direction of the sales data project will depend on the specific goals and objectives of the project. By analyzing sales data across different variables, gaining insights into the performance of products or services, identifying trends and patterns, and making data-driven decisions to improve sales performance and grow the business.New skills I gained while  working on R projects Data manipulation and analysis: R is a powerful tool for data manipulation and analysis, allowing you to perform various statistical analyses, generate visualizations, and clean and transform data.
+<P>1.Programming and automation: R is a programming language, so working on an R project can improve your programming skills, especially in areas such as data structures, functions, and loops. Additionally, you can use R to automate repetitive tasks, saving you time and effort.
+2.Collaboration and version control: When working on an R project, you can collaborate with other team members by using version control tools such as Git and GitHub. This allows you to track changes to your code, work on multiple versions of your project, and share your work with others.
+3.Writing reports and documents: R can be used to generate reports and documents, such as HTML or PDF files, that contain your data analysis, code, and visualizations. This can help you communicate your findings to others in a clear and organized way.
+4.Machine learning and predictive modeling: R has a wide range of libraries and packages for machine learning and predictive modeling, which can help you build models to make predictions and classify data based on patterns and trends.
+I Contributed by fixing bugs, adding new features, or creating entirely new packages that address specific needs or problems.I suggest joining R user groups and forums which are a great place to connect with other R users and share your knowledge and experiences.I Provided feedback and suggestions:reporting bugs, suggesting new features, or providing feedback on existing features.</P> 
+
+References:1.Africapolis. (2021). African Urbanization Dynamics 2021: Data, Maps and Statistics. Retrieved from https://www.africapolis.org/african-urbanization-dynamics-2021-data-maps-and-statistics/
+
+2.Arvis, J.-F., Duval, Y., Shepherd, B., Utoktham, C., & Wiederer, C. (2013). Trade costs in the developing world: 1995-2010. World Bank Policy Research Working Paper No. 6309. Retrieved from https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2202674
+
+3.Kouni, M., Tsioumas, V., & Papageorgiou, L. G. (2019). Analysing trade and transport networks: Evidence from the European Union. Journal of Transport Geography, 74, 1-10. https://doi.org/10.1016/j.jtrangeo.2018.12.003
+
+4.Jankowska, A., & Guzik, J. (2021). Logistics performance of countries in Africa, Asia, and Latin America: An empirical study based on data from the World Bank. Transportation Research Part E: Logistics and Transportation Review, 156, 102155. https://doi.org/10.1016/j.tre.2021.102155
+
+5.Vaze, V., & D'Souza, R. (2020). A review of seaport performance measurement models with an emphasis on Asia-Pacific region. Maritime Policy & Management, 47(5), 563-584. https://doi.org/10.1080/03088839.2020.1750475
+
+
+
+
+
+
+
+ 
+
+
+
+
+

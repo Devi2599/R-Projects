@@ -1,0 +1,42 @@
+---
+title: "week4_proj"
+output: html_document
+date: "2023-02-06"
+---
+
+```{r, message= FALSE, warning=FALSE}
+library(mapview)
+library(tigris)
+options(tigris_use_cache = TRUE)
+
+boston_zctas <- zctas(
+  cb = TRUE, 
+  starts_with = c("021", "022", "024"),
+  year = 2018
+)
+mapview(boston_zctas)
+
+names(boston_zctas)
+```
+```{r, message=FALSE,warning=FALSE}
+
+boston_se_data = boston_zctas %>%
+  left_join(.,'self_employment', by = c("GEOID10" = "ZIPCODE")) %>%
+  mutate(pct_self_emp = 100 * (self_emp / total)) %>%
+  select(GEOID10, self_emp, pct_self_emp)
+```
+
+```{r, message= FALSE,warning= FALSE}
+tm_shape(boston_zctas, projection = 26918) + 
+  tm_fill(col = "pct_self_emp", 
+          palette = "Purples", 
+          title = "% self-employed,\n2018 IRS SOI data")
+```
+```{r, message=FALSE, warning=FALSE}
+tm_shape(boston_zctas) + 
+  tm_polygons() + 
+  tm_bubbles(size = "self_emp", 
+             alpha = 0.5, 
+             col = "navy",
+             title.size = "Self-employed filers,\n2018 IRS SOI data")
+```

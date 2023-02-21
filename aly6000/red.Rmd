@@ -1,0 +1,6 @@
+---
+title: "naam"
+output: html_document
+date: "2023-01-23"
+---
+<FONT SIZE = 3, color="red"><B>WORD</B></FONT>

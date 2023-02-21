@@ -1,0 +1,341 @@
+
+<P><BR>
+<CENTER>
+<FONT SIZE = 4, COLOR="#2c32c3">
+<B>ALY6000 Introduction  to Analytics</B>
+<BR><B>NORTHEASTERN UNIVERSITY</B>
+<BR>DEVIKA PATIL
+<BR>DATE: 23-01-2023
+<P>Project 2 Report</P><P>Dr.Dee Chiluiza, PhD
+</FONT>
+</CENTER>
+<BR>
+<P><B><FONT SIZE = 3>THE SIGNIFICANCE OF DESCRIPTIVE STATISTICS</B><BR>
+<P><FONT SIZE = 2>Descriptive statistics are essential since showing only the raw data, especially if there is a lot of it, would make it impossible to understand what the data is trying to convey. Descriptive statistics enable us to display the data in a more pertinent manner as a result, making the data analysis process simpler.
+<BR><P><B><FONT SIZE = 3>THE SIGNIFICANCE OF INFERENTIAL STATISTICS</B><BR>
+<P><FONT SIZE= 2>The practice of inferential statistics involves using sampled data to infer or predict characteristics about a larger sample or population.
+<BR><P><B><FONT SIZE = 3>WHY DATA PRESENTATION IS IMPORTANT</B><BR>
+<P><FONT SIZE = 2>Tools for presenting data successfully allow for the simplification of large volumes of complex information while still making it easily understandable and readable. They are powerful communication tools. Additionally, they keep readers interested.
+<BR></P></B>
+</TITLE>
+
+```{r, message=FALSE, warning=FALSE}
+#Libraries
+
+library(readxl)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(RColorBrewer)
+```
+```{r, message=FALSE, warning=FALSE}
+#Data sets(add importing codes here)
+MyData =  readxl::read_excel("Datasets/M2Data.xlsx")
+
+read_excel("Datasets/M2Data.xlsx")
+```
+```{r, message=FALSE, warning=FALSE}
+##Task1-first&last rows
+# obtain the top and bottom rows
+head_rows = head(MyData, 5)
+
+tail_rows = tail(MyData, 5)
+
+#combining the two sets into a single one
+final_rows = rbind(head_rows,tail_rows)
+
+#organize into one table
+knitr::kable(final_rows)
+
+##OBSERVATIONS:It is important to create the vector object before binding it.
+##2.In the table we see the first 5 elements  starting from Central US,Oceania etc and last 5 elements starting from Eastern Asia, Western US etc.
+```
+```{r, message=FALSE,warning=FALSE}
+##TASK2-CATEGORIES AND FREQUENCIES OF THE MARKET
+
+Market = MyData$Market
+
+table(MyData$Market)
+as.data.frame(table(MyData$Market))
+
+knitr::kable(table(MyData$Market),
+             align = "c", 
+             digits = 2,
+             format = "html",
+             table.attr = "style='width:40%;'")
+
+#OBSERVATIONS- 1.IN THE MARKET DATA ASIA PACIFIC HAS A HIGHEST FREQUENCY AND AFRICA HAS THE LOWEST FREQUENCY
+
+```
+```{r, message=FALSE,warning=FALSE}
+#TASK3-BARPLOT FOR MARKET
+
+#create horizontal bar plot
+Market_T =table(MyData$Market)
+  
+#creating horizontal bar graph
+Market_bar = barplot(Market_T, 
+                     main = "Market_T" ,
+                     xlab = "row_count" ,ylab = "market_places", 
+                     col ="green" ,xlim =c(0,450), horiz = TRUE ,
+                     las= 1,cex.axis =0.3 ,cex.names =0.5 ,cex.lab = 0.6)
+##Oservations:1.here,X-Axis represents names of different continents, while the Y-Axis represents freuencies respectively
+#2.Asia pacific has highest frequency,Europe being the second highest and Africa has lowest frequency
+##3.There are 
+```
+```{r, message=FALSE,warning=FALSE}
+#Task4-product category-Africa
+
+D_Africa = filter(MyData, Market == 'Africa')
+ filter(D_Africa, Market == 'Africa')
+ knitr::kable(D_Africa)
+ 
+task4 = D_Africa$Product_Category
+table(D_Africa$Product_Category)
+pie_label = unique(D_Africa$Product_Category, clockwise = FALSE)
+as.data.frame(table(pie_label))
+
+
+X =(table(D_Africa$Product_Category)) 
+pie_label = unique(D_Africa$Product_Category, clockwise =FALSE)
+pie(X, labels = pie_label, radius = 0.9, clockwise = FALSE)
+
+##Observations:1.
+##2.Technology has the highest value ~30 and office supplies has the least ~11
+```
+```{r, warning=FALSE, message=FALSE}
+#TASK5-PRODUCT_SUBCATEGORY
+Africa5_table = table(D_Africa$Product_SubCategory)
+#plot table using bar plot\
+bar5 = barplot(Africa5_table,xlim =c(0,20), horiz = TRUE,
+               col = "navyblue",las= 1,cex.names =0.5 ,cex.lab = 0.6)
+#use text
+text(y=table(D_Africa$Product_SubCategory),
+     bar5,
+     table(D_Africa$Product_SubCategory),
+     cex= 0.8,
+     pos = 3)
+
+
+##OBSERVATIONS:By Adding text feature and presenting the barplot horizontally we get a better view and the display of the labels are easier to read 
+```
+```{r, message=FALSE,warning=FALSE}
+#TASK6-CREATE A BAR PLOT
+Africa5_table = table(D_Africa$Product_SubCategory)
+bar5 = barplot(Africa5_table,xlim =c(0,20), horiz = TRUE,
+              las= 1,cex.names =0.5 ,cex.lab = 0.6,
+               main = "African subcategories",
+               ylab = "Frequencies",
+               xlab = "African regions",
+               col = 'steelblue',
+               las = 2,
+               yaxp = c(0,16,5),2)
+text(y=table(D_Africa$Product_SubCategory),
+     bar5,
+     table(D_Africa$Product_SubCategory),
+     cex = 0.6,
+     pos = 3)
+
+par(mar=c(0.1,0.1,0.1,0.1),
+    mai= c(0.2,0.2,0.2,0.2),
+    mfcol = c(1,2))
+
+```
+```{r}
+##OBSERVATIONS:par() CODE HELPS WITH ALIGNING THE MARGINS OF BARPLOTS 
+```
+```{r}
+#TASK7-SALES/SUBCATEGORY
+
+Africa7_table = D_Africa$Sales
+Africa8_table = D_Africa$Product_SubCategory
+Af_2 = table(D_Africa$Product_SubCategory)
+knitr::kable(Af_2)
+as.data.frame(table(Af_2))
+
+tapply(Africa7_table,Africa8_table, mean)
+as.data.frame(tapply(Africa7_table,Africa8_table, mean))
+
+#create object 'meanSales' to store data
+meanSales = tapply(D_Africa$Sales, D_Africa$Product_SubCategory, mean)
+#present data using table
+knitr::kable(meanSales)
+
+dotchart(meanSales)
+
+
+##OBSERVATIONS:BY DOTCHART PRESENTATION COPIERS HAVE THE HIGHEST SALES MEANWHILE ACCESSORIES AND MACHINES HAVING THE LEAST SALES.
+```
+```{r, message=FALSE,warning=FALSE}
+
+#TASK8-SALES/REGION(AFRICA)
+
+Africa7_table = D_Africa$Sales
+Africa9_table = D_Africa$Region
+as.data.frame(table(Africa7_table))
+
+tapply(Africa7_table,Africa9_table, sum)
+as.data.frame(tapply(Africa7_table,Africa9_table, sum))
+
+totalSales =tapply(D_Africa$Sales,D_Africa$Region,sum)
+knitr::kable(totalSales)
+
+##OBSERVATIONS:
+```
+```{r, message=FALSE, warning =FALSE}
+#Task 9
+Africa10_table = D_Africa$ShippingCost
+Africa9_table = D_Africa$Region
+table(D_Africa$ShippingCost)
+as.data.frame(table(Africa10_table))
+
+tapply(Africa9_table,Africa10_table, mean)
+as.data.frame(tapply(Africa9_table,Africa10_table, mean))
+
+```
+```{r, message=FALSE, warning=FALSE}
+#create object 'meanSales' to store data
+meanShippingcost = tapply(D_Africa$ShippingCost, D_Africa$Region, mean)
+#present data using table
+knitr::kable(meanShippingcost)
+```
+```{r, message=FALSE, warning=FALSE}
+##Task10
+##1.Numeric:Numeric data is the most common data type in R. The values of a variable or series will be recorded as numeric data if they are numbers or contain decimals.
+##2.Integer:The integer data type is an exception to the rule for numeric data. Integers are defined as numbers without decimals. You can use it if you are certain that the numbers you store won't ever contain decimals.
+##3.Factor:Factor variables are unique examples of character variables because they may store text as well. When there are few different character strings, factor variables are used.
+##4.Double:real number represented as a double in "double-precision floatint point format."
+
+```
+
+```{r, message=FALSE,warning=FALSE}
+
+###task 11
+par(mfcol=c(2,1),
+    mai=c(1, 1, 0.2, 0.4),
+    mar=c(4,4,0.5,2))
+
+#present a box plot of all profits
+boxplot(MyData$Profits, col = "blue", xlab='Africa_Profits',
+        horizontal = T)
+#present a histogram of all profits
+hist(MyData$Profits,
+     breaks = 50,col = "purple",
+     main = "NA")
+##Observations:1.From boxplot we deduce that African market has many outliers.
+##2.African markets highest profit value is between ~0 to ~2000.
+```
+```{r, message=FALSE, warning=FALSE}
+#TASK 12:LATAM
+D_LATAM = dplyr::filter(MyData, Market == "LATAM")
+#boxplot
+LATAM_box = boxplot(D_LATAM$Profits, horizontal = T, col = "orange",
+                    las = 1,xlab = "Profit", main= "LATAM-Profits")
+
+#histogram
+LATAM_Hist = hist(D_LATAM$Profits, breaks = 40,main = "LATAM-Profits",xlab = "Profits",ylab = "Frequencies", col = "brown", freq = FALSE,ylim = c(0,0.0025), xlim = c(-2100,1500))
+##Observations:1.From the boxplot we deduce that Latam market has more than 3 outliers that is ~4 outliers.
+##2.From the histogram we deduce that Latam Marker has its highest values between ~0 to ~500.
+
+```
+```{r, message=FALSE, warning=FALSE}
+ ##task13
+task_latsales = D_LATAM$Sales
+task_latregion = D_LATAM$Region
+tapply(task_latsales,task_latregion, sum)
+as.data.frame(tapply(task_latsales,task_latregion, sum))
+
+totalsales =tapply(D_LATAM$Sales,D_LATAM$Region,sum)
+knitr::kable(totalsales)
+##Observations:from the table we see that Central America has the highest value of 924226.2 and Carribean has the lowest value of 196775.2
+```
+```{r,warning=FALSE, message=FALSE}
+
+#TASK14-BOXPLOT FOR LATAM
+ # Create example data
+t14box = D_LATAM$Region
+t14box = D_LATAM$Profits
+
+final_L= data.frame('South_America' = rnorm(1000),
+                   'Caribbean' = runif(1000),
+                   'Central_America' = rpois(1000, 3))
+
+head(final_L)
+boxplot(final_L,horizontal = T, cex.axis = 0.5, cex.lab = 0.4,cex.names= 0.6)
+
+```
+```{r}
+##Observations:Boxplot is adjusted to horizontal view to give a better presentation with details of LATAM Market.
+```
+```{r, message=FALSE, warning=FALSE}
+##TASK15-TABLE(CUMSUM,PROB)
+t15 = MyData$Product_SubCategory %>%
+  table() %>%
+  as.data.frame() %>%
+  rename(Frequency = Freq) %>%
+  mutate(Cumsum = cumsum(Frequency), 
+         Probabilities = Frequency/nrow(MyData),
+         Cumprob = cumsum(Probabilities))
+knitr::kable(t15,
+             digits = 2,
+             caption = "LATAM-Product_Subcategory",
+             format = "html",
+             table.attr = "style ='width:40%;'",
+             align = 'c') %>%
+  kable_classic(bootstrap_options = "striped",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+```
+```{r}
+#OBSERVATIONS:BY USING BOOTSTRAP OPTIONS WE CAN BEAUTIFY THE TABLE WITH MANY OPTIONS,ONE WHICH I USED IS STRIPED THAT SEGREGATES THE TABLE AND DISPLAYS ITS ELEMENTS PROPERLY 
+```
+
+```{r, message=FALSE, warning=FALSE}
+##TASK16-PROB GRAPHS
+
+pie_label1 = t15$Frequency
+pie(t15$Frequency, labels = pie_label1, radius = 0.6)
+barplot(t15$Cumsum,xlab = 'Subs',ylab = 'cumsum',main = 'barplot forcumsum')
+L_pie =t15$Probabilities
+pie(t15$Probabilities,labels = L_pie, cex.axis = 0.4,cex.lab = 0.5,cex.names = 0.3)
+barplot(t15$Cumprob,xlab = 'product subcategories',ylab = 'cumprob',main ='barplot for cumprob')
+text(t15$Cumprob,cex.axis = 0.5,cex.names=0.6,cex.lab = 0.4,pos=2)
+par(mfrow=c(1,2))
+##OBSERVATIONS:1.From the frequency piechart, we see phones having highest value and envelopes having the least value
+##2.From the cumsum barplot, we see tables having the highest value and accessories having the least value
+##3.From the probabilities piechart,we see copiers,Bookcases and appliances having highest value and envelopes having the least value
+##4.From the cumprob barplot, we see that table have a highest value and accessories has the least value 
+```
+
+```{r, warning=FALSE,message=FALSE}
+##TASK17
+
+EuropeData = dplyr::filter(MyData, Market == "Europe")
+
+#get total quantity
+Europetotalsales = tapply(EuropeData$Quantity,EuropeData$Company_Segment, sum)
+
+par(mar=c(6,7,5,2)+.2)
+Europe_Barplot = barplot(Europetotalsales,las=1,xlab= "Comapny_Segment",ylab = "Total quantity",col = "pink",ylim = c(0,1500),las=1)
+
+##OBSERVATIONS:From the barplot we see that there are three company segments and those are Consumer,Corporate,Home office Consumer segment having a quantity that lies between ~600 to ~800,Corporate segment having a quantity between ~400 to ~600, and Home office has its value at 200
+
+```
+<p>CONCLUSIONS<P>
+From reading and understanding the tasks to executing it,I have learnt how to present the data in an organized manner,I have learnt to understand the given data and how to analyze it through R,Aligning two object using tapply, and dplyr library,R makes reading the graphs easier and to organize graphs in a better way I'd recommend using The par() function,as it can be used to access or set graphical parameters. We can change the background color of the frame, add a margin to the plot, and divide the frame into the necessary grid using the par() method. We can create multiple graphs simultaneously using the R par() function.
+
+
+<BR><P>BIBLIOGRAPHY</P>
+<P>Soetewey,A.(Dec,2019).“Data Types in R.” Stats and R,Retrieved on Jan 21 from, https://statsandr.com/blog/data-types-in-r/. 
+<P> Harris, Hal.(2005). “The Cartoon Guide to Chemistry (Gonick, Larry; Criddle, Craig).” Journal of Chemical Education, vol. 82, no. 12, p. 1777.,Retrieved on Jan 21 from, https://doi.org/10.1021/ed082p1777.2. 
+<P> R, Pie Chart (with Examples).(2018). DataMentor,Retrieved on Jan 21 from, https://www.datamentor.io/r-programming/pie-chart/. 
+<P> Seda Erdem(Sep 2021). | University of Stirling. “Statistics with R - Practical Sessions.” Chapter 4 Statistical Inference, Retrieved on Jan 21 2023 from, https://bookdown.org/mrenna/statbook/statistical-inference.html. 
+<P> Team, TechVidvan.(2021).“R Applications - 9 Real-World Use Cases of R Programming.” TechVidvan,Retrieved on Jan 21 from https://techvidvan.com/tutorials/r-applications/. 
+
+
+<P><B><APPENDIX>
+ <P><FONT SIZE = 3>An R markdown has been attached to this report and the name of the file is week2_Rproj.Rmd</P>

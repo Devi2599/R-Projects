@@ -1,0 +1,208 @@
+----
+
+
+<P><BR>
+<CENTER>
+<FONT SIZE = 4, COLOR="#2c32c3">
+<P>Project 3 Report</P>
+<B>ALY6000 Introduction  to Analytics</B>
+<BR><B>NORTHEASTERN UNIVERSITY</B>
+<BR>DEVIKA PATIL
+<BR>MAJOR-PROJECT MANAGEMENT
+<BR>DATE OF SUBMISSION: 31-01-2023
+<P>Dr.Dee Chiluiza, PhD</P>
+</FONT>
+</CENTER>
+<BR>
+<P><FONT SIZE = 3>R's data analysis application is useful in that it uses code to calculate complex calculations and allows for the creation of reports using RMarkdown.<BR>
+
+<P> Keypoints:1.There are some functions that allows us to personalize the table such as 'knitr::kable'.<BR>
+
+<P>2.we can organize our graphs properly using par() codes.<BR>
+
+-----
+
+``` {r LibraryData, message= FALSE, warning= FALSE}
+
+# using different Lib to implement this report
+library(readxl)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(RColorBrewer)
+library(ggplot2)
+library(FSA)
+inchBio = read_excel("Datasets/inchBio.xlsx")
+read_excel("Datasets/inchBio.xlsx")
+```
+
+
+```{r t1, message=FALSE,warning=FALSE}
+##T1
+##T1A: code to present imported dataset
+ X = summary(inchBio)
+  knitr::kable(X, align = 'c', 
+               digits = 2)
+  
+##observations: we can observe netID,species,length,weight and scale in order
+  
+```
+
+```{r t1b, message=FALSE, warning=FALSE}
+#T-1b
+glimpse(inchBio)
+ knitr::kable(X, align = 'c', 
+               digits = 2)
+
+##OBSERVATIONS:There are 505 rows and 6 columns,netID,fishID are whole numbers whereas length and weight are decimal values;species is character and scale displays boolean values.
+ 
+##Task 1c:
+ ##OBSERVATIONS:from task 1a and task 1b we can clearly observe the change in the two tables displayed where in task 1A the whole imported dataset table  is displayed as outcome while in task 1B we get mean, median, mode and minimum values for each individual variables of the dataset.
+ 
+``` 
+```{r, message= FALSE,warning=FALSE}
+B_var = ncol(inchBio)
+B_var
+##observations:there are 6 columns in the dataset
+
+```
+```{r t2, message=FALSE, warning=FALSE}
+B_ob = nrow(inchBio)
+B_ob
+## observations: there are 505 rows
+```
+```{r t3, message=FALSE, warning=FALSE}
+v_t3 = subset(inchBio, 
+  select = c('species', 'length', 'weight'))
+v_t4 = rbind(head(v_t3, 4),tail(v_t3, 4))
+kable(v_t4) %>%
+  kable_styling(latex_options = "striped")
+##Observation:from the table we can see the length and weight of every other species from dataset
+
+```
+```{r t4, message=FALSE,warning=FALSE}
+ desc_table1 = round(mean(inchBio$netID),2)
+ desc_table2 = median(inchBio$fishID)
+ desc_table3 = min(inchBio$species)
+ 
+B1_tab = matrix(c(desc_table1,desc_table2,desc_table3),byrow = TRUE, nrow = 3)
+col_names = c("Value")
+r_names = c("mean","median","minimum")
+colnames(B1_tab) = col_names
+rownames(B1_tab) = r_names
+knitr::kable(B1_tab, latex_options = "striped")
+##observations:From the table that resulted from above code we deduce that mean is 78.68,median is 569 and minimum value is Black Crappie
+
+```
+```{r t5, message=FALSE, warning=FALSE}
+##Task 5: to obtain species table 
+  o1_B = inchBio %>%
+  filter(species=="Black Crappie")
+  o2_B =inchBio%>%
+    filter(species == "Bluegill")
+  o3_B = inchBio%>%
+    filter(species == "Bluntnose Minnow")
+  o4_B = inchBio%>%
+    filter(species == "Iowa Darter")
+  o5_B = inchBio%>%
+    filter(species == "Largmouth Bass")
+  o6_B = inchBio%>%
+    filter(species == "Pumpkinseed")
+  o7_B = inchBio%>%
+    filter(species == "Yellow Perch")
+## display objects with their length and weight
+O1_mean_len = round(mean(o1_B$length),1)
+O1_mean_wght = round(mean(o1_B$weight),1)
+O2_mean_len = round(mean(o2_B$length),1)
+O2_mean_wght = round(mean(o2_B$weight),1)
+O3_mean_len = round(mean(o3_B$length),1)
+O3_mean_wght = round(mean(o3_B$weight),1)
+O4_mean_len = round(mean(o4_B$length),1)
+O4_mean_wght = round(mean(o4_B$weight),1)
+O5_mean_len = round(mean(o5_B$length),1)
+O5_mean_wght = round(mean(o5_B$weight),1)
+O6_mean_len = round(mean(o6_B$length),1)
+O6_mean_wght = round(mean(o6_B$weight),1)
+O7_mean_len = round(mean(o7_B$length),1)
+O7_mean_wght = round(mean(o7_B$weight),1)
+
+
+##create vectors with data
+F_table = matrix(c(O1_mean_len,O1_mean_wght,
+                    O2_mean_len,O2_mean_wght,  
+                    O3_mean_len,O3_mean_wght,  
+                    O4_mean_len,O4_mean_wght, 
+                    O5_mean_len,O5_mean_wght,  
+                    O6_mean_len,O6_mean_wght, 
+                    O7_mean_len,O7_mean_wght),byrow = TRUE,nrow = 7, ncol=2)
+n_s = c(unique(inchBio$species))
+dimnames=list(n_s, c("Mean Length", "Mean weight"))
+F_table %>%
+kable(caption = "<center><b>Mean Length & Width by Specie</b></center>") %>%
+  kable_classic(full_width = F, html_font = "Times New Roman")
+
+
+##Observations: the result shows mean length and mean width for 7 species 
+```
+```{r task 6, message=FALSE, warning=FALSE}
+## display frequencies, cumulative frequencies, proabilities, and cumulative probabilities for each specie
+B3_table = table(inchBio$species) 
+data.frame(t(B3_table)) 
+
+B3_table = table(inchBio$species) %>% 
+as.data.frame() %>%
+rename(Species = Var1) %>%
+rename(Frequency = Freq) %>% 
+mutate(Cumsum = cumsum(Frequency),  
+       Probabilities = Frequency/nrow(inchBio), 
+       Cumprob = cumsum(Probabilities)) 
+
+knitr::kable(B3_table, 
+             digits = 2, 
+             caption = "B3_table", 
+             format = "html", 
+             table.attr = "style ='width:40%;'", 
+             align = 'c') %>% 
+
+  kable_classic(bootstrap_options = "striped", 
+                full_width = TRUE, 
+                position = "center", 
+                font_size = 12) 
+  ##Observations: from the table we can observe that bluegill has highest value in frequency and probabilities,and black crappie having the least value; Yellow perch having high cumsum value.
+##Pumpkinseed has the least probability value and high cumprob value
+```
+```{r task7, message=FALSE, warning=FALSE}
+##code to present pie chart for probability
+pie(B3_table$Probabilities, labels = inchBio$Var1, radius = 0.7, 
+    col = terrain.colors(7))
+##observations: From the Piechart we can deduce that bluegill has the maximum probability out of all other species
+
+```
+```{r, message=FALSE, warning=FALSE}
+## code to present barplot for cumprob
+barplot(B3_table$Cumprob, xlab = 'inchBio$species',ylab = 'cumprob',
+        col = 'navyblue',names.arg = B3_table$Cumprob, las= 1,cex.names =0.5 ,cex.lab = 0.6, )
+par(mfrow=c(1,2))
+
+##observations:As the data proceeds with variables of species the cumprob gradually increases
+
+```
+```
+<P>CONCLUSIONS<P>
+
+<P>Out of 6 species and total of 505 fishes. Overall, there was a correlation length to weight correlation that longer the fish’s size, the weight exponentially increases regardless of the species.
+
+
+
+<P>BIBLIOGRAPHY<P>
+<P>“Kable_styling: HTML Table Attributes.” RDocumentation, https://www.rdocumentation.org/packages/kableExtra/versions/1.3.4/topics/kable_styling. 
+
+<P>“ICEPAC.” R Probability, http://www.columbia.edu/~cjd11/charles_dimaggio/DIRE/styled-4/styled-6/code/. 
+
+<P>“Rename Columns - Rename.” - Rename • Dplyr, https://dplyr.tidyverse.org/reference/rename.html. 
+
+<P>Appendix<BR>
+<P>An R Markdown file 'Week3_RProj.Rmd' is attached to this report.

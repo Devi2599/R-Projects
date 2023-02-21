@@ -1,0 +1,61 @@
+---
+title: "myfirstrmd"
+output: html_document
+date: "2023-01-19"
+---
+
+<P><BR>
+<CENTER>
+<FONT SIZE = 4, COLOR="#2c32c3">
+<B>ALY6000 Introduction  to Analytics</B>
+<BR><B>NORTHEASTERN UNIVERSITY</B>
+<BR>DEVIKA PATIL
+<BR>DATE: 'format(t, format = "%d %B %Y")'
+<P>Project Report
+</FONT>
+</CENTER>
+print(paste("",round(minc),2)),quote = F)
+
+<br>
+<b>use inline r codes</b>
+the mean value is `r meanC` miles per hour.
+<p>
+
+<br>
+histogram
+<p>
+
+-------------
+LIBRARY DATA
+-------------
+
+<P><BR>
+
+```{r libraries data, message=FALSE, warning=FALSE}
+# Libraries
+library(readxl)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(RColorBrewer)
+
+# Data sets(add importing codes here)
+M2Data =  readxl::read_excel("Datasets/M2Data.xlsx")
+
+```
+barplot(table(table1$CumPerc))
+
+-------------
+Introduction
+-------------
+
+<P><BR>
+<FONT SIZE = 4, COLOR="#A11515"></B>
+Introduction
+</B></FONT>
+</P>
+</BR>
+

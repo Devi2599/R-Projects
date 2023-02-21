@@ -1,0 +1,45 @@
+---
+title: "week4_proj"
+output: html_document
+date: "2023-02-06"
+---
+```{r, message=FALSE, warning=FALSE}
+library(readxl)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(RColorBrewer)
+library(ggplot2)
+
+```
+```{r, message=FALSE, warning=FALSE}
+DE = read_excel("Datasets/DE.xlsx")
+View(DE)
+```
+```{r, message=FALSE, warning=FALSE}
+ X = summary(DE)
+  knitr::kable(X, align = 'c', 
+               digits = 2)
+```
+```{r, message=FALSE, warning=FALSE}
+B_var = ncol(DE)
+B_var
+```
+```{r, message=FALSE, warning=FALSE}
+v_t3 = subset(DE, 
+  select = c('Job Title','Salary Estimate', 'Company Name', 'Location', 'Size'))
+v_t4 = rbind(head(v_t3, 4),tail(v_t3, 4))
+kable(v_t4) %>%
+  kable_styling(latex_options = "striped")
+```
+```{r, message=FALSE, warning=FALSE}
+par(las=2) # make label text perpendicular to axis
+par(mar=c(7,5,4,3)) # increase y-axis margin.
+Y = table(DE$`Salary Estimate`,DE$`Job Title`)
+barplot(Y, main="Salary distribution", cex.names=0.6)
+
+```
+```{r, message=FALSE, warning=FALSE}

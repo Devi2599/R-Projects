@@ -1,0 +1,208 @@
+---
+title: "projectversion2"
+output: html_document
+date: "2023-01-19"
+---
+
+```{r libraries data, message=FALSE, warning=FALSE}
+# Libraries
+
+library(readxl)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(RColorBrewer)
+
+
+ 
+#Data sets(add importing codes here)
+MyData =  readxl::read_excel("Datasets/M2Data.xlsx")
+
+read_excel("Datasets/M2Data.xlsx")
+
+head(MyData, n=5)
+
+tail(MyData, n=5)
+
+knitr::kable(head(MyData[, 1:2],"simple"))
+
+Market = MyData$Market
+
+table(MyData$Market)
+as.data.frame(table(MyData$Market))
+
+Market %>%
+  table() %>%
+  barplot()
+
+Mafrica = filter(MyData, Market == 'Africa')
+ filter(Mafrica, Market == 'Africa')
+ 
+ t4Africa = dplyr::filter(Mafrica, Market == 'Africa')
+knitr::kable(head(Mafrica[], 'simple'))
+
+task_p = Mafrica$Product_Category
+table(Mafrica$Product_Category)
+as.data.frame(table(task_p))
+
+task_p %>%
+  table(Mafrica$Product_Category) %>%
+  pie()
+ 
+```{r}
+task_t = Mafrica$Product_SubCategory
+table(Mafrica$Product_SubCategory)
+as.data.frame(table(task_t))
+
+```{r}
+#Create a table
+task5_table = table(Mafrica$Product_SubCategory)
+
+#Plot the table using a bar plot
+t5bar = barplot(task5_table)
+
+#use text() to show values per column
+text(y=table(Mafrica$Product_SubCategory),
+     t5bar,
+     table(Mafrica$Product_SubCategory),
+     cex=0.8,
+     pos=3)
+#add some par codes
+```{r}
+
+task_q = Mafrica$Sales
+
+tapply(task_q,task_t, mean)
+as.data.frame(tapply(task_q,task_t, mean))
+
+#create object 'meanSales' to store data
+meanPetal = tapply(iris$Petal.Length, iris$Species, mean)
+#present data using table
+knitr::kable(meanPetal)
+
+dotchart(meanPetal)
+
+```{r}
+task_r = Mafrica$Region
+table(Mafrica$Region)
+as.data.frame(table(task_r))
+
+```{r}
+#Create a table
+task8_table = table(Mafrica$Region)
+
+#Plot the table using a bar plot
+t8bar = barplot(task8_table)
+
+#use text() to show values per column
+text(y=table(Mafrica$Region),
+     t8bar,
+     table(Mafrica$Region),
+      cex=0.8,
+     pos=3)
+
+
+
+```{r}
+task_q = Mafrica$Sales
+tapply(task_q, task_r, sum)
+as.data.frame(tapply(task_q, task_r, sum))
+
+
+task_s = Mafrica$ShippingCost
+tapply(task_s, task_r, mean)
+as.data.frame(tapply(task_s, task_r, mean))
+
+```{r}
+#Create a table
+task9_table = table(Mafrica$Region)
+
+#Plot the table using a bar plot
+t9bar = barplot(task9_table)
+
+#use text() to show values per column
+text(y=table(Mafrica$Region),
+     t9bar,
+     table(Mafrica$Region),
+     cex=0.8,
+     pos=3)
+
+```{r}
+
+###task 11
+par(mfcol=c(2,1),
+    mai=c(1, 1, 0.2, 0.4),
+    mar=c(4,4,0.5,2))
+
+#present a box plot of all profits
+boxplot(MyData$Profits,
+        horizontal = T)
+
+#present a histogram of all profits
+hist(MyData$Profits,
+     breaks = 50,
+     main = "")
+```{r}
+
+t13LATAM = filter(MyData, Market == 'LATAM')
+ filter(t13LATAM, Market == 'LATAM')
+ knitr::kable(head(t13LATAM[], 'simple'))
+ 
+task_a = t13LATAM$Region
+table(t13LATAM$Region)
+as.data.frame(table(task_a))
+
+#Create a table
+task14_table = table(t13LATAM$Region)
+
+
+
+                                        # Create example data
+t14bar = data.frame('South_America' = rnorm(1000),
+                   'Caribbean' = runif(1000),
+                   'Central_America' = rpois(1000, 3))
+head(t14bar)
+
+#create a boxplot
+boxplot(t14bar)
+
+```{r}
+t15 = MyData$Product_Category %>%
+  table() %>%
+  as.data.frame() %>%
+  rename(Frequency = Freq) %>%
+  mutate(Cumsum = cumsum(Frequency), 
+         Probabilities = Frequency/nrow(MyData),
+         Cumprob = cumsum(Probabilities))
+knitr::kable(t15,
+             digits = 2,
+             caption = "Table's name to be fixed",
+             format = "html",
+             table.attr = "style ='width:40%;'",
+             align = 'c') %>%
+  kable_classic(bootstrap_options = "striped",
+                full_width = TRUE,
+                position = "center",
+                font_size = 12)
+
+
+ t15 = MyData$Product_Category %>%
+   table()%>%
+  pie()
+
+
+
+  
+
+
+ 
+ 
+ 
+
+
+
+
+

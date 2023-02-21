@@ -1,0 +1,59 @@
+---
+title: "P2V2"
+output: html_document
+date: "2023-01-22"
+---
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(knitr)
+library(magrittr)
+
+#Datasets used in this report
+wine = read_excel("Datasets/wine.xlsx")
+read_excel("Datasets/wine.xlsx")
+
+#object created
+Ash_wine = wine$Ash
+
+#numericv
+Average = mean(Ash_wine)
+Standard_deviation = sd(Ash_wine)
+Median = median(Ash_wine)
+Minimum  = min(Ash_wine)
+Maximum  = max(Ash_wine)
+Range = max(Ash_wine)-min(Ash_wine)
+quantile_62 = quantile(Ash_wine, 0.62)
+```
+
+```{r create Matrix, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#Statistics for Magnesium
+wine_stats = matrix(c(Average,Standard_deviation,Median,Minimum,Maximum,Range,quantile_62),byrow = TRUE, nrow = 7)
+column_names = c("Value")
+row_names = c("Average","Standard_deviation","Median","Minimum","Maximum","Range","quantile_62")
+colnames(wine_stats) = column_names
+rownames(wine_stats) = row_names
+
+#Formatting the table
+wine_table = knitr::kable(wine_stats,
+                          align = "c",
+                          digits = 2,
+                          format = "html",
+                          caption = "Statistics for Ash-Devika_Patil(ALY6000)",
+                          table.attr = "style ='width:40%;'"
+                          )
+wine_table
+```
+
+```{r}
+hist(wine_stats, breaks=4, main="With breaks=4")
+
+Typeo = wine$Type
+
+boxplot(Ash_wine ~ Typeo, data = wine, xlab = "number of ash wine",
+   ylab = "wine per city", main = "Ash Data")
+boxplot(Ash_wine ~ Typeo, data = wine, xlab = "wine per city",col =c('#f6e0b6','#eea992','#a39194')
+   ylab = "number of ash wine",main = "Ash Data", horizontal = TRUE)

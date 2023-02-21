@@ -1,0 +1,69 @@
+---
+title: "Project2_R"
+output: html_document
+date: "2023-01-21"
+---
+
+```{r Libraries, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#libraries used in this report
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(knitr)
+library(magrittr)
+```
+```{r, message=FALSE, warning=FALSE}
+#Datasets used in this report
+wine = read_excel("Datasets/wine.xlsx")
+read_excel("Datasets/wine.xlsx")
+```
+```{r, message=FALSE, warning=FALSE}
+#choose a variable from dataset
+ 
+Winetype = wine$Alcohol
+unique(wine$Alcohol)
+```
+```{r, message=FALSE, warning=FALSE}
+Winetype_mean = mean(Winetype)
+mean(Winetype)
+Winetype_sd = sd(Winetype)
+sd(Winetype)
+```
+```{r, message=FALSE, warning=FALSE}
+#define upper and lower bound
+lower_bound = Winetype_mean - Winetype_sd
+upper_bound = Winetype_mean + Winetype_sd
+
+#Create a sequence of 1000 x values based on population mean and standard deviation
+x = seq(-4, 4, length = 1000) * Winetype_sd + Winetype_mean
+
+#create a vector of values that shows the height of the probability distribution
+#for each value in x
+y = dnorm(x, Winetype_mean, Winetype_sd)
+
+#plot normal distribution with customized x-axis labels
+plot(x,y, type = "l", lwd = 2, axes = FALSE, xlab = "", ylab = "")
+sd_axis_bounds = 5
+axis_bounds = seq(-sd_axis_bounds * Winetype_sd + Winetype_mean,
+                    sd_axis_bounds * Winetype_sd + Winetype_mean,
+                    by = Winetype_sd)
+axis(side = 1, at = axis_bounds, pos = 0)
+```
+```{r, message=FALSE, warning=FALSE}
+# Mean alcohol from wine data
+MeanAlc = mean(wine$Alcohol)# Standard deviation of alcohol from wine data
+SDAlc = sd(wine$Alcohol)# Get density with adjust = 1.2
+X = density(wine$Alcohol, adjust =1.2)
+hist(wine$Alcohol)# choose any value on the left or the right plot(X)
+Y = 12
+abline(v=Y)# Get probability
+get P(X>vlaue) and P(X<value)
+Probgreater12 = 1 - pnorm((Y-MeanAlc)/SDAlc)
+Problesser12 = 1 - Probgreater12
+```
+```{r,message=FALSE, warning=FALSE}
+
+
+
+
